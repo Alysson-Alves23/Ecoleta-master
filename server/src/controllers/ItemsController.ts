@@ -5,11 +5,13 @@ class ItemsController {
   async index(request: Request, response: Response) {
     const items = await knex("items").select("*");
 
+    const baseUrl = `${request.protocol}://${request.get("host")}`;
+
     const serializedItems = items.map((item) => {
       return {
         id: item.id,
         title: item.title,
-        image_url: `http://192.168.0.13:3333/uploads/${item.image}`,
+        image_url: `${baseUrl}/uploads/${item.image}`,
       };
     });
 
