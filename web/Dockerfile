@@ -1,10 +1,13 @@
-FROM node:16-alpine AS build
+FROM node:24-alpine AS build
 
 WORKDIR /app
 
 # Dependências primeiro (cache)
 COPY package.json package-lock.json ./
-RUN npm ci --legacy-peer-deps
+# garante legacy-peer-deps dentro do build
+COPY .npmrc ./.npmrc
+# `npm ci` falha se o lock estiver fora de sync; para dev/rebuild local usamos install
+RUN npm install --legacy-peer-deps --no-audit --no-fund
 
 # Código e build
 COPY . .
