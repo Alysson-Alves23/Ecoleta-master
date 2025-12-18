@@ -18,19 +18,21 @@ const Home = () => {
             Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente.
           </p>
 
-          <Link to="/points">
-            <span>
-              <FiMapPin />
-            </span>
-            <strong>Ver pontos cadastrados</strong>
-          </Link>
+          <div className="actions">
+            <Link to="/create-point" className="primary">
+              <span>
+                <FiLogIn />
+              </span>
+              <strong>Cadastre um ponto de coleta</strong>
+            </Link>
 
-          <Link to="/create-point">
-            <span>
-              <FiLogIn />
-            </span>
-            <strong>Cadastre um ponto de coleta</strong>
-          </Link>
+            <Link to="/points" className="secondary">
+              <span>
+                <FiMapPin />
+              </span>
+              <strong>Ver pontos cadastrados</strong>
+            </Link>
+          </div>
         </main>
       </div>
     </div>
