@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "../../assets/logo.svg";
 import "./styles.css";
-import { FiLogIn } from "react-icons/fi";
+import { FiLogIn, FiMapPin } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -17,6 +17,13 @@ const Home = () => {
           <p>
             Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente.
           </p>
+
+          <Link to="/points">
+            <span>
+              <FiMapPin />
+            </span>
+            <strong>Ver pontos cadastrados</strong>
+          </Link>
 
           <Link to="/create-point">
             <span>
