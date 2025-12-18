@@ -27,7 +27,9 @@ routes.post(
       body: Joi.object().keys({
         name: Joi.string().required(),
         email: Joi.string().required().email(),
-        whatsapp: Joi.number().required(),
+        // Em multipart/form-data (FormData), os campos chegam como string.
+        // Além disso, whatsapp pode ser grande e não deve ser tratado como number.
+        whatsapp: Joi.string().required(),
         latitude: Joi.number().required(),
         longitude: Joi.number().required(),
         city: Joi.string().required(),

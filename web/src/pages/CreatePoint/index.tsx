@@ -180,9 +180,16 @@ const CreatePoint: React.FC = () => {
 
     console.log(data);
 
-    await api.post("/points", data);
-
-    history.push("/");
+    try {
+      await api.post("/points", data);
+      history.push("/");
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.message ||
+        "Falha ao cadastrar ponto. Verifique os campos e tente novamente.";
+      console.error("Falha ao cadastrar ponto:", err);
+      alert(message);
+    }
   }
 
   return (
