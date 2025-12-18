@@ -50,8 +50,12 @@ const CreatePoint: React.FC = () => {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const { latitude, longitude } = position.coords;
-        setInitionPosition([latitude, longitude]);
+      const { latitude, longitude } = position.coords;
+      setInitionPosition([latitude, longitude]);
+      // Se o usuário não clicar no mapa, usamos a geolocalização como posição selecionada
+      setSelectedPosition((prev) =>
+        prev[0] === 0 && prev[1] === 0 ? [latitude, longitude] : prev
+      );
       },
       () => {
         // Se o usuário negar permissão, mantém posição padrão.
@@ -63,12 +67,12 @@ const CreatePoint: React.FC = () => {
     api
       .get("/items")
       .then((response) => {
-        setItems(response.data);
+      setItems(response.data);
       })
       .catch((error) => {
         console.error("Falha ao carregar itens da API:", error);
         setItems([]);
-      });
+    });
   }, []);
 
   useEffect(() => {
@@ -140,6 +144,12 @@ const CreatePoint: React.FC = () => {
     const city = selectedCity;
     const [latitude, longitude] = selectedPosition;
     const items = selectedItems;
+
+    // Evita cadastrar ponto sem localização válida
+    if (latitude === 0 && longitude === 0) {
+      alert("Selecione a localização no mapa (ou permita a geolocalização).");
+      return;
+    }
 
     const data = new FormData();
 

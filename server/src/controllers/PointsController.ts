@@ -67,6 +67,22 @@ class PointsController {
 
     console.log(request.body);
 
+    const lat = Number(latitude);
+    const lng = Number(longitude);
+    const hasValidCoords =
+      Number.isFinite(lat) &&
+      Number.isFinite(lng) &&
+      Math.abs(lat) <= 90 &&
+      Math.abs(lng) <= 180 &&
+      !(lat === 0 && lng === 0);
+
+    if (!hasValidCoords) {
+      return response.status(400).json({
+        message:
+          "Coordenadas inválidas. Selecione a localização no mapa ou permita a geolocalização.",
+      });
+    }
+
     const trx = await knex.transaction();
 
     const point = {
@@ -74,8 +90,8 @@ class PointsController {
       name,
       email,
       whatsapp,
-      latitude,
-      longitude,
+      latitude: lat,
+      longitude: lng,
       city,
       uf,
     };
