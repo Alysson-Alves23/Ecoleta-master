@@ -48,17 +48,27 @@ const CreatePoint: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const { latitude, longitude } = position.coords;
-      setInitionPosition([latitude, longitude]);
-    });
-  });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setInitionPosition([latitude, longitude]);
+      },
+      () => {
+        // Se o usuário negar permissão, mantém posição padrão.
+      }
+    );
+  }, []);
 
   useEffect(() => {
-    api.get("/items").then((response) => {
-      console.log(response.data);
-      setItems(response.data);
-    });
+    api
+      .get("/items")
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        console.error("Falha ao carregar itens da API:", error);
+        setItems([]);
+      });
   }, []);
 
   useEffect(() => {
@@ -69,6 +79,10 @@ const CreatePoint: React.FC = () => {
       .then((response) => {
         const ufInitials = response.data.map((uf) => uf.sigla);
         setUfs(ufInitials);
+      })
+      .catch((error) => {
+        console.error("Falha ao carregar UFs do IBGE:", error);
+        setUfs([]);
       });
   }, []);
 
@@ -82,6 +96,10 @@ const CreatePoint: React.FC = () => {
       .then((response) => {
         const cityNames = response.data.map((city) => city.nome);
         setCities(cityNames);
+      })
+      .catch((error) => {
+        console.error("Falha ao carregar cidades do IBGE:", error);
+        setCities([]);
       });
   }, [selectedUf]);
 
