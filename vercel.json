@@ -1,15 +1,10 @@
 {
-  "builds": [
-    {
-      "src": "web/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "web/build"
-      }
-    }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
+  "framework": "create-react-app",
+  "installCommand": "cd web && npm ci --legacy-peer-deps",
+  "buildCommand": "cd web && npm run build",
+  "outputDirectory": "web/build",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
 
