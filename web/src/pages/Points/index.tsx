@@ -190,14 +190,16 @@ const Points: React.FC = () => {
             <ul className="points-list">
               {points.map((point) => (
                 <li key={point.id}>
-                  <img src={point.image_url} alt={point.name} />
-                  <div>
-                    <strong>{point.name}</strong>
-                    <span>
-                      {point.city}/{point.uf}
-                    </span>
-                    <small>ID: {point.id}</small>
-                  </div>
+                  <Link className="point-link" to={`/points/${point.id}`}>
+                    <img src={point.image_url} alt={point.name} />
+                    <div>
+                      <strong>{point.name}</strong>
+                      <span>
+                        {point.city}/{point.uf}
+                      </span>
+                      <small>Ver detalhes</small>
+                    </div>
+                  </Link>
                 </li>
               ))}
             </ul>
