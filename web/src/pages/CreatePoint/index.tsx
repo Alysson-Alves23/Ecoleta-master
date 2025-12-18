@@ -183,11 +183,12 @@ const CreatePoint: React.FC = () => {
     try {
       await api.post("/points", data);
       history.push("/");
-    } catch (err: any) {
+    } catch (err) {
+      const e = err as any;
       const message =
-        err?.response?.data?.message ||
+        e?.response?.data?.message ||
         "Falha ao cadastrar ponto. Verifique os campos e tente novamente.";
-      console.error("Falha ao cadastrar ponto:", err);
+      console.error("Falha ao cadastrar ponto:", e);
       alert(message);
     }
   }
