@@ -1,6 +1,6 @@
 {
   "framework": "create-react-app",
-  "installCommand": "cd web && npm ci --legacy-peer-deps",
+  "installCommand": "cd web && npm install --legacy-peer-deps --no-audit --no-fund",
   "buildCommand": "cd web && npm run build",
   "outputDirectory": "web/build",
   "rewrites": [
