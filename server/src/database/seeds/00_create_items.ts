@@ -2,6 +2,9 @@ import Knex from 'knex'
 
 export async function seed(knex:Knex) {
 
+  // Idempotente: evita duplicar itens a cada start (docker/compose)
+  await knex('items').del();
+
   await knex('items').insert([
     { title: 'Lâmpadas', image: 'lampadas.svg'},
     { title: 'Pilhas e baterias', image: 'baterias.svg'},
