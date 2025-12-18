@@ -1,0 +1,22 @@
+FROM node:16-alpine AS build
+
+WORKDIR /app
+
+# Dependências primeiro (cache)
+COPY package.json package-lock.json ./
+RUN npm ci --legacy-peer-deps
+
+# Código e build
+COPY . .
+RUN npm run build
+
+FROM nginx:alpine
+
+# SPA fallback (React Router)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/build /usr/share/nginx/html
+
+EXPOSE 80
+
+
+
