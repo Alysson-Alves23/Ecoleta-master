@@ -111,6 +111,14 @@ const PointDetail: React.FC = () => {
     );
   }
 
+  const lat = Number(point.latitude);
+  const lng = Number(point.longitude);
+  const hasValidCoords =
+    Number.isFinite(lat) &&
+    Number.isFinite(lng) &&
+    Math.abs(lat) <= 90 &&
+    Math.abs(lng) <= 180;
+
   return (
     <div id="page-point-detail">
       <header>
@@ -139,13 +147,21 @@ const PointDetail: React.FC = () => {
             <span>Visualização do ponto no mapa</span>
           </legend>
 
-          <Map center={[point.latitude, point.longitude]} zoom={15}>
-            <TileLayer
-              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={[point.latitude, point.longitude]} />
-          </Map>
+          {hasValidCoords ? (
+            <Map center={[lat, lng]} zoom={15}>
+              <TileLayer
+                attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={[lat, lng]} />
+            </Map>
+          ) : (
+            <p className="muted">
+              Coordenadas inválidas para este ponto (latitude/longitude fora do
+              intervalo). Refaça o cadastro do ponto para corrigir a
+              localização.
+            </p>
+          )}
         </fieldset>
 
         <fieldset>
