@@ -1,7 +1,11 @@
 #page-home {
   height: 100vh;
 
-  background: url("../../assets/home-background.svg") no-repeat 700px bottom;
+  /* Em telas grandes, 700px da esquerda faz o SVG invadir o texto.
+     Ancoramos à direita para evitar sobreposição/“glitch” no 1920x1080. */
+  background: url("../../assets/home-background.svg") no-repeat;
+  background-position: calc(100% - 40px) bottom;
+  background-size: 720px;
 }
 
 #page-home .content {
@@ -112,6 +116,11 @@
 }
 
 @media (max-width: 900px) {
+  #page-home {
+    background-position: center bottom;
+    background-size: 560px;
+  }
+
   #page-home .content {
     align-items: center;
     text-align: center;
