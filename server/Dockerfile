@@ -17,3 +17,4 @@ EXPOSE 3333
 CMD ["sh", "-lc", "npm run knex:migrate && npm run knex:seed && npm run dev"]
 
 
+
