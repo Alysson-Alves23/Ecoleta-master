@@ -78,7 +78,22 @@ const Points: React.FC = () => {
   useEffect(() => {
     api
       .get<Item[]>("/items")
-      .then((response) => setItems(response.data))
+      .then((response) => {
+        const data: any = response.data;
+        if (!Array.isArray(data)) {
+          console.error(
+            "Resposta inesperada em GET /items (esperado array). baseURL=",
+            api.defaults.baseURL,
+            "typeof=",
+            typeof data,
+            "data=",
+            data
+          );
+          setItems([]);
+          return;
+        }
+        setItems(data);
+      })
       .catch((err) => {
         console.error("Falha ao carregar itens da API:", err);
         setItems([]);
@@ -166,7 +181,8 @@ const Points: React.FC = () => {
 
         <h2>Ítens de Coleta</h2>
         <ul className="items-grid">
-          {items.map((item) => (
+          {Array.isArray(items) &&
+            items.map((item) => (
             <li
               key={item.id}
               onClick={() => toggleSelectedItem(item.id)}

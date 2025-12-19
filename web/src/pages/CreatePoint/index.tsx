@@ -67,7 +67,20 @@ const CreatePoint: React.FC = () => {
     api
       .get("/items")
       .then((response) => {
-      setItems(response.data);
+      const data: any = response.data;
+      if (!Array.isArray(data)) {
+        console.error(
+          "Resposta inesperada em GET /items (esperado array). baseURL=",
+          api.defaults.baseURL,
+          "typeof=",
+          typeof data,
+          "data=",
+          data
+        );
+        setItems([]);
+        return;
+      }
+      setItems(data);
       })
       .catch((error) => {
         console.error("Falha ao carregar itens da API:", error);
@@ -307,7 +320,8 @@ const CreatePoint: React.FC = () => {
           </legend>
 
           <ul className="items-grid">
-            {items.map((item: Item) => (
+            {Array.isArray(items) &&
+              items.map((item: Item) => (
               <li
                 key={item.id}
                 onClick={() => handleSelectItem(item.id)}
