@@ -5,19 +5,36 @@ class PointsController {
   async index(request: Request, response: Response) {
     const { city, uf, items } = request.query;
 
-    const parsedItems = String(items)
+    const itemsRaw = Array.isArray(items)
+      ? items.join(",")
+      : items == null
+      ? ""
+      : String(items);
+
+    const parsedItems = itemsRaw
       .split(",")
-      .map((item) => Number(item.trim()));
+      .map((item) => Number(String(item).trim()))
+      .filter((n) => Number.isFinite(n));
 
     const baseUrl = `${request.protocol}://${request.get("host")}`;
 
-    const points = await knex("points")
-      .join("point_items", "points.id", "=", "point_items.point_id")
-      .whereIn("point_items.item_id", parsedItems)
-      .where("city", String(city))
-      .where("uf", String(uf))
-      .distinct()
-      .select("points.*");
+    const query = knex("points").distinct().select("points.*");
+
+    if (parsedItems.length > 0) {
+      query
+        .join("point_items", "points.id", "=", "point_items.point_id")
+        .whereIn("point_items.item_id", parsedItems);
+    }
+
+    if (city != null && String(city).trim() !== "") {
+      query.where("city", String(city));
+    }
+
+    if (uf != null && String(uf).trim() !== "") {
+      query.where("uf", String(uf));
+    }
+
+    const points = await query;
 
     const serializedPoints = points.map((item) => {
       return {
@@ -83,6 +100,21 @@ class PointsController {
       });
     }
 
+    if (!request.file?.filename) {
+      return response.status(400).json({ message: "Imagem é obrigatória." });
+    }
+
+    const parsedItems = String(items || "")
+      .split(",")
+      .map((item: string) => Number(item.trim()))
+      .filter((n: number) => Number.isFinite(n));
+
+    if (parsedItems.length === 0) {
+      return response
+        .status(400)
+        .json({ message: "Selecione ao menos 1 item de coleta." });
+    }
+
     const trx = await knex.transaction();
 
     const point = {
@@ -100,10 +132,7 @@ class PointsController {
 
     const point_id = insertedIds[0];
 
-    const pointItems = items
-      .split(",")
-      .map((item: string) => Number(item.trim()))
-      .map((item_id: number) => {
+    const pointItems = parsedItems.map((item_id: number) => {
         return {
           item_id,
           point_id,
